@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/hajimehoshi/ebiten/ebitenutil"
+	"golang.org/x/image/font"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/peterhellberg/gfx"
@@ -21,10 +22,10 @@ func DrawRect(screen *ebiten.Image, r gfx.Rect, clr color.Color, width ...int) {
 	}
 
 	max := r.Max.Sub(gfx.V(thickness-1, thickness-1))
-	ebitenutil.DrawRect(screen, r.Min.X, r.Min.Y, r.W()+1, thickness, clr)
-	ebitenutil.DrawRect(screen, r.Min.X, r.Min.Y, thickness, r.H()+1, clr)
-	ebitenutil.DrawRect(screen, r.Min.X, max.Y, r.W()+1, thickness, clr)
-	ebitenutil.DrawRect(screen, max.X, r.Min.Y, thickness, r.H()+1, clr)
+	ebitenutil.DrawRect(screen, r.Min.X, r.Min.Y, r.W(), thickness, clr)
+	ebitenutil.DrawRect(screen, r.Min.X, r.Min.Y, thickness, r.H(), clr)
+	ebitenutil.DrawRect(screen, r.Min.X, max.Y, r.W(), thickness, clr)
+	ebitenutil.DrawRect(screen, max.X, r.Min.Y, thickness, r.H(), clr)
 }
 
 // ImageFromBytes takes a byte array of an PNG image and returns an *ebiten.Image
@@ -40,4 +41,10 @@ func ImageFromBytes(b []byte) *ebiten.Image {
 		log.Fatal(err)
 	}
 	return eImg
+}
+
+func BoundingBoxFromString(s string, fnt font.Face) gfx.Rect {
+	width := font.MeasureString(fnt, s).Ceil()
+	height := fnt.Metrics().Height.Ceil()
+	return gfx.R(0, 0, float64(width), float64(height))
 }
